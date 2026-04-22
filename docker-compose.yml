@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # 后端 API 服务
+  backend:
+    build:
+      context: ./lok-world-backend
+      dockerfile: Dockerfile
+    container_name: lok-world-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./lok_world.db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - CORS_ORIGINS=http://localhost,http://localhost:5173
+    depends_on:
+      - redis
+    volumes:
+      - ./lok-world-backend:/app
+      - pet-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 前端静态资源服务
+  frontend:
+    build:
+      context: ./lok-world-frontend
+      dockerfile: Dockerfile
+    container_name: lok-world-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./lok-world-frontend/dist:/usr/share/nginx/html:ro
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: lok-world-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+  # MySQL 数据库 (开发环境用，生产建议用云数据库)
+  # 生产环境请注释掉，使用云数据库
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: lok-world-mysql
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+  #     MYSQL_DATABASE: lok_world
+  #     MYSQL_USER: lok_user
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD:-lokpassword}
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+
+volumes:
+  redis-data:
+  # mysql-data:

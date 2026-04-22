@@ -1,0 +1,29 @@
+:root {
+  --van-primary-color: #FF6B35;
+  --van-secondary-color: #004E89;
+  --van-background: #F5F5F5;
+  --van-surface: #FFFFFF;
+  --van-text-color: #333333;
+  --van-text-secondary: #666666;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--van-background);
+}
+
+/* 横屏适配 */
+@media (orientation: landscape) {
+  #app {
+    max-width: 100vh;
+    margin: 0 auto;
+  }
+}

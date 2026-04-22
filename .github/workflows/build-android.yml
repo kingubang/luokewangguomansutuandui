@@ -1,0 +1,90 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: lok-world-frontend/package-lock.json
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: lok-world-frontend
+
+      - name: Install Capacitor
+        run: npm install @capacitor/core @capacitor/cli @capacitor/android
+        working-directory: lok-world-frontend
+
+      - name: Build web app
+        run: npm run build
+        working-directory: lok-world-frontend
+
+      - name: Sync to Android
+        run: npx cap sync android
+        working-directory: lok-world-frontend
+
+      - name: Copy Google services (if exists)
+        if: env.GOOGLE_SERVICES_JSON != ''
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo '$GOOGLE_SERVICES_JSON' > lok-world-frontend/android/app/google-services.json
+        shell: bash
+
+      - name: Build Android APK
+        run: ./gradlew assembleDebug
+        working-directory: lok-world-frontend/android
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-debug
+          path: lok-world-frontend/android/app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+
+  build-ios:
+    runs-on: macos-latest
+    if: false  # Disable iOS build for now
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: lok-world-frontend
+
+      - name: Build web app
+        run: npm run build
+        working-directory: lok-world-frontend
+
+      - name: Sync to iOS
+        run: npx cap sync ios
+        working-directory: lok-world-frontend
+
+      - name: Build iOS
+        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -archivePath build/App.xcarchive -exportArchive -exportOptionsPlist ios/App/ExportOptions.plist
+        working-directory: lok-world-frontend

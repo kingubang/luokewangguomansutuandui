@@ -1,0 +1,78 @@
+{
+  "name": "lok-world-channel",
+  "leadAgentId": "e665453fc6624eae9287c480ac0fee73",
+  "workspacePath": "c:/Users/liyanru/WorkBuddy/20260422101304",
+  "createdAt": "2026-04-22T02:13:23.915Z",
+  "options": {
+    "workspacePath": "c:/Users/liyanru/WorkBuddy/20260422101304",
+    "isAutoTeam": false
+  },
+  "members": [
+    {
+      "memberId": "team-lead@lok-world-channel",
+      "name": "team-lead",
+      "role": "Team Lead - coordinates the team and interacts with the user"
+    },
+    {
+      "memberId": "product-manager@lok-world-channel",
+      "name": "product-manager",
+      "role": "创建资深产品经理角色"
+    },
+    {
+      "memberId": "project-manager@lok-world-channel",
+      "name": "project-manager",
+      "role": "创建资深项目经理角色"
+    },
+    {
+      "memberId": "frontend-lead@lok-world-channel",
+      "name": "frontend-lead",
+      "role": "创建资深前端主程角色"
+    },
+    {
+      "memberId": "frontend-dev-1@lok-world-channel",
+      "name": "frontend-dev-1",
+      "role": "创建资深前端开发角色"
+    },
+    {
+      "memberId": "frontend-dev-2@lok-world-channel",
+      "name": "frontend-dev-2",
+      "role": "创建资深前端开发角色2"
+    },
+    {
+      "memberId": "frontend-dev-3@lok-world-channel",
+      "name": "frontend-dev-3",
+      "role": "创建资深前端开发角色3"
+    },
+    {
+      "memberId": "backend-lead@lok-world-channel",
+      "name": "backend-lead",
+      "role": "创建资深后端主程角色"
+    },
+    {
+      "memberId": "devops@lok-world-channel",
+      "name": "devops",
+      "role": "创建运维工程师角色"
+    },
+    {
+      "memberId": "operations@lok-world-channel",
+      "name": "operations",
+      "role": "创建运营负责人角色"
+    },
+    {
+      "memberId": "data-engineer@lok-world-channel",
+      "name": "data-engineer",
+      "role": "创建数据工程师角色"
+    },
+    {
+      "memberId": "game-expert@lok-world-channel",
+      "name": "game-expert",
+      "role": "创建游戏体验专家角色"
+    },
+    {
+      "memberId": "qa@lok-world-channel",
+      "name": "qa",
+      "role": "创建测试工程师角色"
+    }
+  ],
+  "isAutoTeam": false
+}

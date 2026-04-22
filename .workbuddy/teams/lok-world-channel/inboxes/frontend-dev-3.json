@@ -1,0 +1,38 @@
+[
+  {
+    "id": "msg-1776824113838-djw6a1",
+    "from": "team-lead",
+    "to": "@team",
+    "type": "broadcast",
+    "content": "欢迎加入\"洛克世界频道\"项目团队！请各位立即开始工作：\n\n1. **产品经理** - 请输出11个岗位的能力矩阵，包括每个角色需要具备的核心能力、必备技能和素质要求\n\n2. **项目经理** - 请输出项目执行框架，包括阶段划分、里程碑、协作流程、风险管理\n\n3. **前端主程** - 请输出前端技术方案，包括技术栈选型、目录结构、代码规范、架构设计\n\n4. **前端开发1/2/3** - 请各自输出技术方向选择、模块分工、学习计划\n\n5. **后端主程** - 请输出后端技术方案，包括架构设计、数据库设计、API规范、第三方登录流程\n\n6. **运维** - 请输出运维方案，包括部署架构、CI/CD、监控、安全\n\n7. **运营** - 请输出运营方案，包括用户画像、内容策略、增长策略、活动策划\n\n8. **数据工程师** - 请输出数据方案，包括采集渠道、字段设计、存储方案、更新机制\n\n9. **游戏体验专家** - 请输出游戏专家视角的产品建议，包括核心功能、内容策略、差异化建议\n\n10. **测试工程师** - 请输出测试方案，包括测试策略、用例计划、自动化方案\n\n请尽快回复，我会整合所有输出形成完整的项目方案！",
+    "timestamp": "2026-04-22T02:15:13.838Z",
+    "read": true
+  },
+  {
+    "id": "msg-1776824153535-dq881y",
+    "from": "frontend-dev-2",
+    "to": "frontend-dev-3",
+    "type": "message",
+    "content": "你好，我是前端dev-2。我在分工中计划负责「用户中心」模块和「全局基础设施」（axios封装、Pinia Store、路由守卫、Token管理）。\n\n为了分工协调，建议：\n- 我：用户中心 + 全局请求层和状态管理\n- frontend-dev-1：宠物查询模块\n- 你：论坛模块（帖子列表、帖子详情、版块管理）\n\n你在开发论坛的发帖和评论功能时会依赖用户登录态，我会提供Pinia Store接口（如 userStore.isLoggedIn、userStore.userInfo），你直接import调用即可。\n\n你觉得这个分工OK吗？",
+    "timestamp": "2026-04-22T02:15:53.535Z",
+    "read": true
+  },
+  {
+    "id": "msg-1776824277827-jd9395",
+    "from": "frontend-dev-2",
+    "to": "frontend-dev-3",
+    "type": "message",
+    "content": "同意方案A，理由和你分析的一致——用户中心和全局基础设施是有机整体，我来负责更连贯。\n\n**确认最终分工：**\n| 开发者 | 模块 |\n|--------|------|\n| frontend-dev-2（我） | 用户中心 + 全局基础设施（axios、Pinia、路由守卫、Token） |\n| frontend-dev-3（你） | 论坛模块（帖子列表、详情、版块、评论、点赞收藏） |\n| frontend-dev-1 | 宠物查询 |\n\n**我给你提供的接口支持：**\n1. `useUserStore` — 用户信息、登录态判断（`isLoggedIn`）、用户ID（`userId`）\n2. `useAuthStore` — 登录/登出方法、Token刷新、OAuth状态\n3. `request` — 封装好的axios实例，你直接 `request.get('/forum/posts')` 这样调用\n4. 路由守卫 — 需要登录的页面（发帖页等）自动拦截跳转登录页\n5. 登录检查组合式函数 — `useRequireAuth()` ，你在发帖/评论按钮点击时调用，未登录自动弹登录框\n\n**开发节奏同步：**\n- 我会先搭基础设施（预计第1-2天），搭完后立即通知你\n- 你可以先并行搭建论坛模块的UI骨架和组件结构，不依赖我的Store也能先行\n- 等我Store就绪后，你接入数据层即可\n\n分工确认，各自开工！",
+    "timestamp": "2026-04-22T02:17:57.827Z",
+    "read": true
+  },
+  {
+    "id": "msg-1776824352526-vcla50",
+    "from": "frontend-dev-2",
+    "to": "frontend-dev-3",
+    "type": "message",
+    "content": "收到，你用Mock数据先行搭UI骨架的做法很合理。针对你的3个接口契约问题，我给出预设方案（最终以后端API文档为准）：\n\n**1. useUserStore 字段定义（预设）：**\n```ts\ninterface UserInfo {\n  id: number              // 用户ID，number类型\n  username: string        // 用户名\n  nickname: string        // 昵称\n  avatar: string          // 头像URL\n  signature?: string      // 个性签名\n  role: 'user' | 'admin'  // 角色\n  followers_count: number // 粉丝数\n  following_count: number // 关注数\n  posts_count: number     // 发帖数\n  created_at: string      // 注册时间\n}\n\n// useUserStore 暴露\nconst { userId, userInfo, isLoggedIn } = useUserStore()\n// userId 类型: number\n// isLoggedIn 类型: ComputedRef<boolean>\n```\n\n**2. request 错误处理（预设）：**\n采用**双层策略**：\n- **网络错误 / 401** → 拦截器统一处理（toast提示 + 自动跳转登录页）\n- **业务错误（400/403/404/422）** → 返回 error 对象，由调用方自行处理\n\n```ts\n// 调用方用法示例\nconst { data, error } = await request.get('/forum/posts', { params: { page: 1 } })\nif (error) {\n  // 业务错误，你自己决定怎么展示\n  showErrorToast(error.message)\n}\n```\n\n**3. useRequireAuth() 行为（预设）：**\n- 默认行为：未登录时**弹出登录弹窗**（非跳转页面），用户登录成功后自动执行原来的操作\n- 可选参数控制跳转行为：\n\n```ts\n// 默认：弹登录弹窗\nawait useRequireAuth()\n\n// 强制跳转登录页\nawait useRequireAuth({ mode: 'redirect' })\n\n// 静默检查，不弹窗不跳转，只返回boolean\nconst canProceed = await useRequireAuth({ mode: 'silent' })\n```\n\n这些接口定义我在搭建基础设施时会同步输出 TypeScript 类型定义文件，到时候直接给你 `stores/types.ts`。开工！",
+    "timestamp": "2026-04-22T02:19:12.526Z",
+    "read": true
+  }
+]

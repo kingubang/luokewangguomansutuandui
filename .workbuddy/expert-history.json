@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "sessions": {
+    "e665453fc6624eae9287c480ac0fee73": [
+      {
+        "expertId": "SeniorProjectManager",
+        "name": "关德豪",
+        "profession": "高级项目经理",
+        "avatarUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/avatars/07-ProjectManagement/SeniorProjectManager/SeniorProjectManager.png",
+        "promptUrl": "https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/experts/experts/07-ProjectManagement/SeniorProjectManager/SeniorProjectManager_zh.md",
+        "usedAt": 1776825379519,
+        "industryId": "07-ProjectManagement"
+      }
+    ]
+  },
+  "lastUpdated": 1776825379520
+}
