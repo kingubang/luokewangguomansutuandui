@@ -1,24 +1,19 @@
 <template>
   <div id="app">
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
-    
-    <!-- 悬浮窗入口 -->
-    <FloatingBubble />
+    <h1>洛克世界频道</h1>
+    <p>Welcome to the app!</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import FloatingBubble from '@/components/FloatingBubble.vue'
+// Simplified app for testing
 </script>
 
 <style>
 #app {
-  width: 100%;
-  height: 100%;
-  background-color: var(--van-background);
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }
 </style>
